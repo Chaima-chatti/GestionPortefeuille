@@ -1,0 +1,40 @@
+@page "/dashboard"
+@rendermode InteractiveServer
+@using GestionPortefeuille.Models
+@using GestionPortefeuille.Services
+@inject IPortfolioService PortfolioService
+
+<h1>Tableau de bord</h1>
+
+<p>Bienvenue dans votre gestionnaire de portefeuille.</p>
+
+<h3>Transactions récentes</h3>
+<ul>
+    @foreach (var t in _recentTransactions)
+    {
+        <li>@t.Date.ToShortDateString() - @t.Type @t.Quantity x @t.Asset?.Symbol</li>
+    }
+</ul>
+
+<button @onclick="Refresh">Actualiser</button>
+<div>Dernière mise à jour : @_lastUpdate</div>
+
+@code {
+    private List<Transaction> _recentTransactions = new();
+    private string _lastUpdate = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Refresh();
+    }
+
+    private async Task Refresh()
+    {
+        var transactions = await PortfolioService.GetTransactionsAsync();
+        _recentTransactions = transactions
+            .OrderByDescending(t => t.Date)
+            .Take(5)
+            .ToList();
+        _lastUpdate = DateTime.Now.ToString("HH:mm:ss");
+    }
+}

@@ -1,0 +1,67 @@
+@page "/add-transaction"
+@rendermode InteractiveServer
+@using GestionPortefeuille.Models
+@using GestionPortefeuille.Services
+@inject IPortfolioService PortfolioService
+@inject NavigationManager Navigation
+
+<PageTitle>Ajouter transaction - Gestion Portefeuille</PageTitle>
+
+<h2>➕ Ajouter une transaction</h2>
+
+<EditForm Model="@newTransaction" OnValidSubmit="@HandleSubmit">
+    <div class="mb-3">
+        <label class="form-label">Actif</label>
+        <select @bind="newTransaction.AssetId" class="form-control">
+            <option value="">-- Sélectionnez un actif --</option>
+            @foreach (var asset in _assets)
+            {
+                <option value="@asset.Id">@asset.Name (@asset.Symbol)</option>
+            }
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Type</label>
+        <select @bind="newTransaction.Type" class="form-control">
+            <option value="">-- Sélectionnez --</option>
+            <option value="Achat">Achat</option>
+            <option value="Vente">Vente</option>
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Quantité</label>
+        <InputNumber @bind-Value="newTransaction.Quantity" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Prix unitaire</label>
+        <InputNumber @bind-Value="newTransaction.PricePerUnit" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Date</label>
+        <InputDate @bind-Value="newTransaction.Date" class="form-control" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Enregistrer</button>
+    <button type="button" class="btn btn-secondary"
+            @onclick='() => Navigation.NavigateTo("/transactions")'>Annuler</button>
+</EditForm>
+
+@code {
+    private Transaction newTransaction = new Transaction { Date = DateTime.Now };
+    private List<Asset> _assets = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        _assets = await PortfolioService.GetAssetsAsync();
+    }
+
+    private async Task HandleSubmit()
+    {
+        await PortfolioService.AddTransactionAsync(newTransaction);
+        Navigation.NavigateTo("/transactions");
+    }
+}

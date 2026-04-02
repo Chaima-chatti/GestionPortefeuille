@@ -1,0 +1,42 @@
+@page "/"
+@using GestionPortefeuille.Services
+@inject IPortfolioService PortfolioService
+
+<PageTitle>Accueil - Gestion Portefeuille</PageTitle>
+
+<div class="text-center mt-5">
+    <h1>Bienvenue dans Gestionnaire de Portefeuille</h1>
+    <p class="lead">Gérez vos investissements en actions et cryptomonnaies</p>
+    
+    <div class="row mt-5">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">📊 Tableau de bord</h5>
+                    <p class="card-text">Visualisez la valeur de votre portefeuille et les performances</p>
+                    <a href="/dashboard" class="btn btn-primary">Accéder</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">💰 Transactions</h5>
+                    <p class="card-text">Ajoutez vos achats et ventes d'actifs</p>
+                    <a href="/transactions" class="btn btn-primary">Gérer</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">📈 Actifs</h5>
+                    <p class="card-text">Consultez et gérez vos actifs</p>
+                    <a href="/assets" class="btn btn-primary">Voir</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

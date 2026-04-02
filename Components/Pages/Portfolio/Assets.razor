@@ -1,0 +1,40 @@
+@page "/assets"
+@rendermode InteractiveServer
+@using GestionPortefeuille.Models
+@using GestionPortefeuille.Services
+@inject IPortfolioService PortfolioService
+
+<PageTitle>Actifs - Gestion Portefeuille</PageTitle>
+
+<h2>🏢 Gestion des actifs</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Symbole</th>
+            <th>Nom</th>
+            <th>Type</th>
+            <th>Prix actuel</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var asset in _assets)
+        {
+            <tr>
+                <td>@asset.Symbol</td>
+                <td>@asset.Name</td>
+                <td>@asset.Type</td>
+                <td>@asset.CurrentPrice.ToString("C")</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    private List<Asset> _assets = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        _assets = await PortfolioService.GetAssetsAsync();
+    }
+}
